@@ -8,11 +8,13 @@ Created on Sat May 15 15:09:52 2021
 import dash
 from dash import dcc
 from dash import html
+import dash_html_components as html
 from dash.dependencies import Output, Input
 import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy
 import plotly.express as px
+ 
 
 
 project_data = pd.read_csv(r'C:/Users/mutuma/Documents/GIS/CV.Eric/python/rural_urban dashboard/Rural_Urban_Population_By_Age_Sex_and_by_District__2009.csv')
@@ -40,7 +42,10 @@ app.layout = html.Div([
         multi=True,
         value="NAIROBI" )),
         
-             dbc.Col(dcc.Graph(id='my_barchart',figure={},
+             dbc.Col(dcc.Graph(id='my_barchart',figure=px.bar(project_data, x = 'Age_years', y='Total', 
+               title='Total Population To Age Groups', 
+               labels= {'x':'age', 'y':'population'} ) 
+,
                                config={'displayModeBar':False}))
           
                    ])
@@ -57,7 +62,9 @@ app.layout = html.Div([
         multi=True,
         value="NAIROBI" )),
         
-             dbc.Col(dcc.Graph(id='my_linechart', figure={},
+             dbc.Col(dcc.Graph(id='my_linechart', figure=px.line(project_data, x = 'Age_years', y='Total', 
+               title='Total Population To Age Groups', 
+               labels= {'x':'age', 'y':'population'} ) ,
                                config={'displayModeBar':False}))
           
                    ]),
@@ -73,7 +80,9 @@ app.layout = html.Div([
         multi=True,
         value="NAIROBI" )),
         
-             dbc.Col(dcc.Graph(id='my_scatterplot', figure={},
+             dbc.Col(dcc.Graph(id='my_scatterplot', figure=px.scatter(project_data, x = 'Age_years', y='Total', 
+               title='Total Population To Age Groups', 
+               labels= {'x':'age', 'y':'population'} ),
                                config={'displayModeBar':False}))
           
                    ])                
@@ -81,22 +90,18 @@ app.layout = html.Div([
        ])
       
 
-   
-             
-figure =px.bar(project_data, x = 'Age_years', y='Total', 
-               title='Total Population To Age Groups', 
-               labels= {'x':'age', 'y':'population'} )  
 
-@app.callback( Output('my_barchart', 'figure'),
+@app.callback(
+             Output('my_barchart', 'figure'),
              Output('my_linechart', 'figure'),
              Output('my_scatterplot', 'figure'),
-             input('bardrop', 'value'),
+            [ input('bardrop', 'value'),
              input('linedrop', 'value'),
-             input('scatterdrop', 'value'),
+             input('scatterdrop', 'value'),]
              )
 
 
 
-
-if __name__ == '__main__':
-    app.run_server(debug=False)
+    
+    
+    
